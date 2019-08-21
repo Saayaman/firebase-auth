@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-
-export default class SignUp extends Component {
+import { withFirebase } from '../firebaseContext';
+class SignUp extends Component {
   state = {
     username: '',
     email: '',
@@ -16,6 +16,14 @@ export default class SignUp extends Component {
   }
 
   onSubmit = (e) => {
+    const { email, passwordOne } = this.state;
+    const { firebase } = this.props;
+    firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
+    .then((authUser) => {
+      console.log('login success!')
+    }).catch((err) => this.setState({
+      error: err,
+    }));
     e.preventDefault();
   }
 
@@ -58,3 +66,5 @@ export default class SignUp extends Component {
     )
   }
 }
+
+export default withFirebase(SignUp);
