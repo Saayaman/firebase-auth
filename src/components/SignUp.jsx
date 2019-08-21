@@ -6,7 +6,7 @@ export default class SignUp extends Component {
     email: '',
     passwordOne: '',
     passwordTwo: '',
-    error: '',
+    error: null,
   }
 
   handleChange = (e) => {
@@ -15,10 +15,15 @@ export default class SignUp extends Component {
     })
   }
 
+  onSubmit = (e) => {
+    e.preventDefault();
+  }
+
   render() {
     const { username, email, passwordOne, passwordTwo, error } = this.state;
+    const isInvalid = passwordOne !== passwordTwo || passwordOne === '' ||  email === '' || username === '';
     return (
-      <form>
+      <form onSubmit={this.onSubmit}>
         <input
           name="username"
           value={username}
@@ -45,9 +50,9 @@ export default class SignUp extends Component {
           value={passwordTwo}
           onChange={this.handleChange}
           type="password"
-          placeholder="confirmpassword"
+          placeholder="confirm password"
         />
-        <button type="submit">Sign Up</button>
+        <button disabled={isInvalid} type="submit">Sign Up</button>
         {error && <p>{error.message}</p>}
       </form>
     )
