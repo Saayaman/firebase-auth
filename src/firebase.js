@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import "firebase/auth";
+import { VERSION } from 'upath';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -25,6 +26,26 @@ export default class Firebase {
 
   doSignOut = () => {
     return this.auth.signOut();
+  }
+
+  doFacebookLogin = () => {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_birthday');
+    return firebase.auth().signInWithPopup(provider);
+  }
+
+  doGoogleLogin = () => {
+     // Using a popup.
+     var provider = new firebase.auth.GoogleAuthProvider();
+    //  provider.addScope('profile');
+    //  provider.addScope('email');
+     return firebase.auth().signInWithPopup(provider);
+  }
+
+
+  verifyWithPhoneNumber = (phoneNumber) => {
+    var appVerifier = window.recaptchaVerifier;
+    return firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier);
   }
 
 
