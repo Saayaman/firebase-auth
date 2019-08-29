@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { withFirebase } from '../firebaseContext';
-import firebase from 'firebase/app';
-import "firebase/auth";
+// import { withFirebase } from '../firebaseContext';
+// import firebase from 'firebase/app';
+// import "firebase/auth";
+
 class SignUp extends Component {
   state = {
     username: '',
@@ -20,59 +21,33 @@ class SignUp extends Component {
 
   onSubmit = (e) => {
     const { email, passwordOne } = this.state;
-    const { firebase } = this.props;
-    firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
-    .then((authUser) => {
-      console.log('login success!')
-    }).catch((err) => this.setState({
-      error: err,
-    }));
+
+    this.props.userSignUp(email, passwordOne);
+    // const { firebase } = this.props;
+    // firebase.doCreateUserWithEmailAndPassword(email, passwordOne)
+    // .then((authUser) => {
+    //   console.log('login success!')
+    // }).catch((err) => this.setState({
+    //   error: err,
+    // }));
     e.preventDefault();
   }
 
-  handleFacebookLogin = () => {
-    this.props.firebase.doFacebookLogin().then((result) => {
-      console.log('success! facebook', result);
-      }).catch((err) => {
-        return err;
-      });
-  }
+  // handleFacebookLogin = () => {
+  //   this.props.firebase.doFacebookLogin().then((result) => {
+  //     console.log('success! facebook', result);
+  //     }).catch((err) => {
+  //       return err;
+  //     });
+  // }
 
-  handleGoogleLogin = () => {
-    this.props.firebase.doGoogleLogin().then((result) => {
-      console.log('success!', result);
-      }).catch((err) => {
-        return err;
-      });
-  }
-
-  handlePhoneNumber = () => {
-    console.log(this.state.phoneNumber);
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-      'size': 'normal',
-      'callback': function(response) {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        // ...
-        this.onSignInSubmit();
-      },
-      'expired-callback': function() {
-        // Response expired. Ask user to solve reCAPTCHA again.
-        // ...
-      }
-    });
-  }
-
-  onSignInSubmit = () => {
-    this.props.firebase.verifyWithPhoneNumber(this.state.phoneNumber).then(function (confirmationResult) {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      window.confirmationResult = confirmationResult;
-      console.log('success phone');
-    }).catch(function (error) {
-     console.log(error)
-    });
-  }
-
+  // handleGoogleLogin = () => {
+  //   this.props.firebase.doGoogleLogin().then((result) => {
+  //     console.log('success!', result);
+  //     }).catch((err) => {
+  //       return err;
+  //     });
+  // }
 
 
   render() {
@@ -110,23 +85,15 @@ class SignUp extends Component {
             placeholder="confirm password"
           />
           <button disabled={isInvalid} type="submit">Sign Up</button>
-          {error && <p>{error.message}</p>}
+          {this.props.userError && <p>{this.props.userError.message}</p>}
         </form>
         <hr />
-        <button onClick={this.handleFacebookLogin}>Facebook login</button>
-        <button onClick={this.handleGoogleLogin}>Google login</button>
+        {/* <button onClick={this.handleFacebookLogin}>Facebook login</button>
+        <button onClick={this.handleGoogleLogin}>Google login</button> */}
 
-        <input
-          name="phoneNumber"
-          value={phoneNumber}
-          onChange={this.handleChange}
-          type="tel"
-          placeholder="phonenumber"
-        />
-        <button onClick={this.handlePhoneNumber}>Phone number</button>
       </>
     )
   }
 }
 
-export default withFirebase(SignUp);
+export default SignUp;

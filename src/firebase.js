@@ -12,6 +12,9 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_ID
 };
 
+export const firebaseInit = firebase.initializeApp(firebaseConfig);
+
+
 export default class Firebase {
   constructor() {
     firebase.initializeApp(firebaseConfig);
@@ -47,7 +50,5 @@ export default class Firebase {
     var appVerifier = window.recaptchaVerifier;
     return firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier);
   }
-
-
 }
 
